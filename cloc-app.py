@@ -26,8 +26,9 @@ def pullRepo():
     gitrepo = git.Repo(repo)
     gcmd = git.cmd.Git(repo)
     gcmd.pull()
+    print ("Pulling repo")
     gitrepo.git.checkout("-f", "master")
-    
+    print ("Executing cloc")
     proc = subprocess.Popen(["./cloc-exe/cloc-1.92.exe","./"+repo, "--csv","--out", report , "--quiet"], stdout=subprocess.PIPE)
     proc.stdout.read()
    
@@ -42,7 +43,7 @@ def sendMail():
     message["Subject"] = "Result of cloc report for: " + git_url
     message["From"] = senderEmail
     message["To"] = receivingEmail
-
+    print ("Preparing email from " + senderEmail + " to " + receivingEmail)
     part = MIMEBase('application', "octet-stream")
     part.set_payload(open(report, "rb").read())
     encoders.encode_base64(part)
@@ -53,7 +54,7 @@ def sendMail():
         server.starttls(context=context)
         server.login(senderEmail, password)
         server.sendmail(senderEmail, receivingEmail, message.as_string()) 
-
+    print ("Email successfully sent")
 
 report = parseRepo() + ".csv"
 pullRepo()
