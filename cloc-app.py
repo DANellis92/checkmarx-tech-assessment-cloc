@@ -13,7 +13,7 @@ password = getpass.getpass(prompt="Enter your email password: ")
 receivingEmail = input("Enter destination email: ")
 git_url = input("Type target git repo URL and press enter: ")
 
-print(password, senderEmail)
+
 def parseRepo():
 	return(git_url[git_url.rfind('/')+1:git_url.rfind('.')])
 
@@ -25,13 +25,13 @@ def pullRepo():
     
     gitrepo = git.Repo(repo)
     gcmd = git.cmd.Git(repo)
-    gcmd.pull()
     print ("Pulling repo")
-    gitrepo.git.checkout("-f", "master")
+    gcmd.pull()
+
     print ("Executing cloc")
     proc = subprocess.Popen(["./cloc-exe/cloc-1.92.exe","./"+repo, "--csv","--out", report , "--quiet"], stdout=subprocess.PIPE)
     proc.stdout.read()
-   
+    print("Report completed")
 def install(package):
 	main(['install', package])		
 
